@@ -65,7 +65,9 @@ if (savedTheme === "dark") {
 }
 renderTasks();
 
-addBtn.addEventListener("click", addTask);
+addBtn.onclick = function () {
+    addTask();
+};
 
 taskInput.addEventListener("keypress", function (e) {
 
