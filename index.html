@@ -5,290 +5,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Taskly</title>
+    <title>Taskly | Görev Yöneticisi</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="images/icon.svg">
+
+    <link rel="icon" type="image/svg+xml" href="images/icon.svg">
     <link rel="stylesheet" href="style.css">
-    
-    
 </head>
 
 <body>
 
     <main class="container">
 
+        <!-- ÜST ALAN -->
         <header class="header">
 
-            <div class="header-top">
+            <div class="brand">
+                <h1>
+                    <span class="logo">☑️</span>
+                    <span class="title">Taskly</span>
+                </h1>
 
-                <div>
-<h1>
-    <span class="logo">☑️</span>
-    <span class="title">Taskly</span>
-</h1>
-                    <p>Görevlerini düzenli yönet.</p>
+                <p>Gününü planla, görevlerini tamamla.</p>
+            </div>
 
+            <div class="header-actions">
+
+                <div class="notification">
+                    🔔
+                    <span id="notificationCount">0</span>
                 </div>
 
-                <button id="themeBtn">
+                <button id="themeBtn" title="Tema değiştir">
                     🌙
                 </button>
 
             </div>
-            <div class="notification">
-
-    🔔
-
-    <span id="notificationCount">
-
-        0
-
-    </span>
-
-</div>
 
         </header>
+
+
+        <!-- KARŞILAMA ALANI -->
         <section class="hero">
 
-    <div class="hero-content">
+            <div class="hero-content">
 
-        <h2>Planla. Tamamla. Başar.</h2>
+                <span class="hero-label">GÖREV YÖNETİCİSİ</span>
 
-        <p>
-            Günlük görevlerini düzenle, ilerlemeni takip et ve hedeflerine ulaş.
-        </p>
+                <h2>Planla. Tamamla. Başar.</h2>
 
-        <button onclick="taskInput.focus()">
-            Görev Eklemeye Başla
-        </button>
+                <p>
+                    Günlük görevlerini düzenle, önceliklerini belirle
+                    ve ilerlemeni kolayca takip et.
+                </p>
 
-    </div>
+                <button onclick="taskInput.focus()">
+                    + Yeni Görev Ekle
+                </button>
 
-    <img src="images/hero.png" alt="Taskly">
+            </div>
 
-</section>
+            <img src="images/hero.png" alt="Taskly görev yönetimi">
 
+        </section>
+
+
+        <!-- ÖZET -->
         <section class="dashboard">
 
             <div class="card">
-                <span>Toplam</span>
+                <span>📋 Toplam</span>
                 <h2 id="totalTask">0</h2>
             </div>
 
             <div class="card">
-                <span>Tamamlanan</span>
+                <span>✅ Tamamlanan</span>
                 <h2 id="completedTask">0</h2>
             </div>
 
             <div class="card">
-                <span>Kalan</span>
+                <span>⏳ Kalan</span>
                 <h2 id="remainingTask">0</h2>
             </div>
+
             <div class="card">
+                <span>🔴 Geciken</span>
+                <h2 id="overdueTask">0</h2>
+            </div>
 
-    <span>⭐ Favori</span>
-
-    <h2 id="favoriteTask">0</h2>
-
-</div>
-
-<div class="card">
-
-    <span>📅 Bugün</span>
-
-    <h2 id="todayTask">0</h2>
-
-</div>
-
-<div class="card">
-
-    <span>🔴 Geciken</span>
-
-    <h2 id="overdueTask">0</h2>
-
-</div>
-
-        </section>
-<section class="focus-card">
-
-    <h2>🎯 Günün Görevi</h2>
-
-    <p id="focusTask">
-
-        Bugün için görev bulunmuyor.
-
-    </p>
-
-</section>
-<div class="progress-info">
-
-    <span>İlerleme</span>
-
-    <span id="progressText">0%</span>
-
-</div>
-
-<section class="progress">
-
-    <div id="progressBar"></div>
-
-</section>
-
-        <section class="task-form">
-
-            <input
-                type="text"
-                id="taskInput"
-                placeholder="Yeni görev ekle...">
-
-            <select id="category">
-
-                <option>Genel</option>
-                <option>Okul</option>
-                <option>İş</option>
-                <option>Kişisel</option>
-
-            </select>
-
-            <select id="priority">
-
-                <option value="Düşük">🟢 Düşük</option>
-                <option value="Orta">🟡 Orta</option>
-                <option value="Yüksek">🔴 Yüksek</option>
-
-            </select>
-
-            <input
-                type="date"
-                id="date">
-
-            <button id="addBtn">
-
-                + Görev Ekle
-
-            </button>
+            <!-- JavaScript bozulmasın diye tutuluyor -->
+            <h2 id="favoriteTask" hidden>0</h2>
+            <h2 id="todayTask" hidden>0</h2>
 
         </section>
 
-        <section class="search">
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="🔍 Görev ara...">
+        <!-- İLERLEME -->
+        <section class="progress-card">
 
-        </section>
-        <select id="sortSelect">
+            <div class="progress-info">
+                <span>Bugünkü ilerlemen</span>
+                <span id="progressText">0%</span>
+            </div>
 
-    <option value="default">Sırala</option>
-
-    <option value="name">🔤 İsim</option>
-
-    <option value="date">📅 Tarih</option>
-
-    <option value="priority">🔥 Öncelik</option>
-
-</select>
-
-<p id="taskCounter" class="task-counter">
-
-Toplam 0 görev
-
-</p>
-
-        <section class="filters">
-
-            <button class="filter active" data-filter="all">
-
-                Tümü
-
-            </button>
-
-            <button class="filter" data-filter="active">
-
-                Bekleyen
-
-            </button>
-
-            <button class="filter" data-filter="completed">
-
-                Tamamlanan
-
-            </button>
+            <div class="progress">
+                <div id="progressBar"></div>
+            </div>
 
         </section>
-        <section class="category-stats">
 
-    <div class="category-card">
-        🎓 Okul
-        <span id="schoolCount">0</span>
-    </div>
 
-    <div class="category-card">
-        💼 İş
-        <span id="workCount">0</span>
-    </div>
+        <!-- GÜNÜN GÖREVİ -->
+        <section class="focus-card">
 
-    <div class="category-card">
-        🏠 Kişisel
-        <span id="personalCount">0</span>
-    </div>
+            <div>
+                <span class="section-label">🎯 GÜNÜN GÖREVİ</span>
 
-    <div class="category-card">
-        📌 Genel
-        <span id="generalCount">0</span>
-    </div>
+                <p id="focusTask">
+                    Bugün için görev bulunmuyor.
+                </p>
+            </div>
 
-</section>
+        </section>
+
+
+        <!-- GÖREV EKLEME -->
+        <section class="task-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Yeni Görev</h2>
+                    <p>Yapman gerekenleri listene ekle.</p>
+                </div>
+            </div>
+
+            <div class="task-form">
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Örneğin: JavaScript çalış">
+
+                <select id="category">
+                    <option>Genel</option>
+                    <option>Okul</option>
+                    <option>İş</option>
+                    <option>Kişisel</option>
+                </select>
+
+                <select id="priority">
+                    <option value="Düşük">🟢 Düşük</option>
+                    <option value="Orta">🟡 Orta</option>
+                    <option value="Yüksek">🔴 Yüksek</option>
+                </select>
+
+                <input
+                    type="date"
+                    id="date">
+
+                <button id="addBtn">
+                    + Görev Ekle
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- GÖREVLER -->
+        <section class="tasks-section">
+
+            <div class="tasks-header">
+
+                <div>
+                    <h2>Görevlerim</h2>
+                    <p id="taskCounter" class="task-counter">
+                        Toplam 0 görev
+                    </p>
+                </div>
+
+                <select id="sortSelect">
+                    <option value="default">Sırala</option>
+                    <option value="name">🔤 İsim</option>
+                    <option value="date">📅 Tarih</option>
+                    <option value="priority">🔥 Öncelik</option>
+                </select>
+
+            </div>
+
+
+            <!-- ARAMA -->
+            <div class="search">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="🔍 Görevlerinde ara...">
+            </div>
+
+
+            <!-- FİLTRELER -->
+            <div class="filters">
+
+                <button class="filter active" data-filter="all">
+                    Tümü
+                </button>
+
+                <button class="filter" data-filter="active">
+                    Bekleyen
+                </button>
+
+                <button class="filter" data-filter="completed">
+                    Tamamlanan
+                </button>
+
+            </div>
+
+
+            <!-- GÖREV LİSTESİ -->
+            <div
+                class="task-list"
+                id="taskList">
+            </div>
+
+
+            <!-- BOŞ DURUM -->
+            <div id="emptyState" class="empty-state">
+
+                <div class="empty-icon">📝</div>
+
+                <h2>Henüz görev yok</h2>
+
+                <p>
+                    İlk görevini ekleyerek planlamaya başlayabilirsin.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- KATEGORİLER -->
+        <section class="category-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Kategoriler</h2>
+                    <p>Görevlerinin dağılımını görüntüle.</p>
+                </div>
+            </div>
+
+            <div class="category-stats">
+
+                <div class="category-card">
+                    <span>🎓 Okul</span>
+                    <strong id="schoolCount">0</strong>
+                </div>
+
+                <div class="category-card">
+                    <span>💼 İş</span>
+                    <strong id="workCount">0</strong>
+                </div>
+
+                <div class="category-card">
+                    <span>🏠 Kişisel</span>
+                    <strong id="personalCount">0</strong>
+                </div>
+
+                <div class="category-card">
+                    <span>📌 Genel</span>
+                    <strong id="generalCount">0</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ARAÇLAR -->
         <section class="tools">
 
-    <button id="exportBtn">
-        📤 Dışa Aktar
-    </button>
+            <button id="exportBtn">
+                📤 Dışa Aktar
+            </button>
 
-    <button id="importBtn">
-        📥 İçe Aktar
-    </button>
-    <button id="clearBtn">
+            <button id="importBtn">
+                📥 İçe Aktar
+            </button>
 
-🗑️ Tümünü Sil
+            <button id="clearBtn">
+                🗑️ Tümünü Sil
+            </button>
 
-</button>
-
-    <input
-        type="file"
-        id="fileInput"
-        hidden
-        accept=".json">
-
-</section>
-
-        <section
-            class="task-list"
-            id="taskList">
+            <input
+                type="file"
+                id="fileInput"
+                hidden
+                accept=".json">
 
         </section>
-        <div id="emptyState" class="empty-state">
-
-    <div class="empty-icon">📝</div>
-
-    <h2>Henüz görev yok</h2>
-
-    <p>İlk görevini ekleyerek başlayabilirsin.</p>
-
-</div>
 
     </main>
+
+
     <footer class="footer">
+        <p>Taskly © 2026 | Developed by Tuğba Nisa Köseoğlu</p>
+    </footer>
 
-    <p>Taskly © 2026 | Developed by Tuğba Nisa Köseoğlu</p>
-
-</footer>
 
     <div id="toast"></div>
 
