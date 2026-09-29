@@ -1083,29 +1083,4 @@ body.dark .overdue {
     }
 
 }
-.hero img {
-    width: 380px;
-    max-width: 45%;
-}
-body.dark #sortSelect {
-    background-color: #1f2937;
-    color: white;
-    border-color: #374151;
-}
 
-body.dark #sortSelect option {
-    background-color: #1f2937;
-    color: white;
-}
-body.dark select#sortSelect {
-    background: #1f2937 !important;
-    background-color: #1f2937 !important;
-    color: #ffffff !important;
-    border: 1px solid #374151 !important;
-    color-scheme: dark;
-}
-
-body.dark select#sortSelect option {
-    background: #1f2937 !important;
-    color: #ffffff !important;
-}
