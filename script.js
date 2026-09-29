@@ -1,14 +1,7 @@
-const focusTask = document.getElementById("focusTask");
-const favoriteTask = document.getElementById("favoriteTask");
+// ==========================
+// HTML ELEMANLARI
+// ==========================
 
-const todayTask = document.getElementById("todayTask");
-
-const overdueTask = document.getElementById("overdueTask");
-const exportBtn = document.getElementById("exportBtn");
-
-const importBtn = document.getElementById("importBtn");
-
-const fileInput = document.getElementById("fileInput");
 const taskInput = document.getElementById("taskInput");
 const category = document.getElementById("category");
 const priority = document.getElementById("priority");
@@ -16,57 +9,88 @@ const date = document.getElementById("date");
 const addBtn = document.getElementById("addBtn");
 
 const searchInput = document.getElementById("searchInput");
-
+const sortSelect = document.getElementById("sortSelect");
 const taskList = document.getElementById("taskList");
 
 const totalTask = document.getElementById("totalTask");
 const completedTask = document.getElementById("completedTask");
 const remainingTask = document.getElementById("remainingTask");
+const overdueTask = document.getElementById("overdueTask");
+
+const favoriteTask = document.getElementById("favoriteTask");
+const todayTask = document.getElementById("todayTask");
 
 const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
 
-const filters = document.querySelectorAll(".filter");
+const focusTask = document.getElementById("focusTask");
 
-const themeBtn = document.getElementById("themeBtn");
-
-const toast = document.getElementById("toast");
-const clearBtn = document.getElementById("clearBtn");
-const sortSelect = document.getElementById("sortSelect");
-const notificationCount=document.getElementById("notificationCount");
+const notificationCount = document.getElementById("notificationCount");
 const taskCounter = document.getElementById("taskCounter");
 const emptyState = document.getElementById("emptyState");
-const progressText = document.getElementById("progressText");
+
 const schoolCount = document.getElementById("schoolCount");
 const workCount = document.getElementById("workCount");
 const personalCount = document.getElementById("personalCount");
 const generalCount = document.getElementById("generalCount");
 
+const filters = document.querySelectorAll(".filter");
 
+const themeBtn = document.getElementById("themeBtn");
+
+const exportBtn = document.getElementById("exportBtn");
+const importBtn = document.getElementById("importBtn");
+const fileInput = document.getElementById("fileInput");
+const clearBtn = document.getElementById("clearBtn");
+
+const toast = document.getElementById("toast");
+
+
+// ==========================
+// DEĞİŞKENLER
+// ==========================
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 let currentFilter = "all";
+
 let editingTaskId = null;
+
+let draggedId = null;
+
+
+// ==========================
+// SAYFA AÇILDIĞINDA
+// ==========================
 
 const savedTheme = localStorage.getItem("theme");
 
-if(savedTheme==="dark"){
+if (savedTheme === "dark") {
 
     document.body.classList.add("dark");
-    themeBtn.textContent="☀️";
 
-}else{
+    themeBtn.textContent = "☀️";
 
-    themeBtn.textContent="🌙";
+} else {
+
+    themeBtn.textContent = "🌙";
 
 }
+
 renderTasks();
 
-addBtn.addEventListener("click",addTask);
 
-taskInput.addEventListener("keypress",(e)=>{
+// ==========================
+// EVENTLER
+// ==========================
 
-    if(e.key==="Enter"){
+addBtn.addEventListener("click", addTask);
+
+
+// Enter ile görev ekleme
+taskInput.addEventListener("keypress", function (e) {
+
+    if (e.key === "Enter") {
 
         addTask();
 
@@ -74,17 +98,25 @@ taskInput.addEventListener("keypress",(e)=>{
 
 });
 
-searchInput.addEventListener("input",renderTasks);
 
-filters.forEach(btn=>{
+// Arama
+searchInput.addEventListener("input", renderTasks);
 
-    btn.addEventListener("click",()=>{
 
-        filters.forEach(item=>item.classList.remove("active"));
+// Filtreler
+filters.forEach(function (button) {
 
-        btn.classList.add("active");
+    button.addEventListener("click", function () {
 
-        currentFilter=btn.dataset.filter;
+        filters.forEach(function (item) {
+
+            item.classList.remove("active");
+
+        });
+
+        button.classList.add("active");
+
+        currentFilter = button.dataset.filter;
 
         renderTasks();
 
@@ -92,22 +124,40 @@ filters.forEach(btn=>{
 
 });
 
-themeBtn.addEventListener("click",toggleTheme);
-exportBtn.addEventListener("click",exportTasks);
 
-importBtn.addEventListener("click",()=>{
+// Tema
+themeBtn.addEventListener("click", toggleTheme);
+
+
+// Sıralama
+sortSelect.addEventListener("change", renderTasks);
+
+
+// Dışa aktar
+exportBtn.addEventListener("click", exportTasks);
+
+
+// İçe aktar
+importBtn.addEventListener("click", function () {
 
     fileInput.click();
 
 });
 
-fileInput.addEventListener("change",importTasks);
-clearBtn.addEventListener("click",clearTasks);
-sortSelect.addEventListener("change",renderTasks);
+fileInput.addEventListener("change", importTasks);
 
-function addTask(){
 
-    if(taskInput.value.trim()===""){
+// Tüm görevleri sil
+clearBtn.addEventListener("click", clearTasks);
+
+
+// ==========================
+// GÖREV EKLEME
+// ==========================
+
+function addTask() {
+
+    if (taskInput.value.trim() === "") {
 
         showToast("Görev boş olamaz");
 
@@ -115,51 +165,60 @@ function addTask(){
 
     }
 
-const task={
+    const task = {
 
-        id:editingTaskId || Date.now(),
+        id: editingTaskId || Date.now(),
 
-        text:taskInput.value,
+        text: taskInput.value.trim(),
 
-        category:category.value,
+        category: category.value,
 
-        priority:priority.value,
+        priority: priority.value,
 
-        date:date.value,
+        date: date.value,
 
-        completed:false,
+        completed: false,
 
-        favorite:false
+        favorite: false
 
     };
 
-    if(editingTaskId){
 
-    tasks = tasks.map(item=>{
+    // Görev düzenleniyorsa
+    if (editingTaskId) {
 
-        if(item.id===editingTaskId){
+        tasks = tasks.map(function (item) {
 
-            return task;
+            if (item.id === editingTaskId) {
 
-        }
+                // Eski tamamlanma ve favori bilgisi kaybolmasın
+                task.completed = item.completed;
+                task.favorite = item.favorite;
 
-        return item;
+                return task;
 
-    });
+            }
 
-    editingTaskId = null;
+            return item;
 
-    addBtn.textContent="➕ Görev Ekle";
+        });
 
-    showToast("Görev güncellendi");
+        editingTaskId = null;
 
-}else{
+        addBtn.textContent = "+ Görev Ekle";
 
-    tasks.push(task);
+        showToast("Görev güncellendi");
 
-    showToast("Görev eklendi");
+    }
 
-}
+    // Yeni görev ekleniyorsa
+    else {
+
+        tasks.push(task);
+
+        showToast("Görev eklendi");
+
+    }
 
     saveTasks();
 
@@ -167,262 +226,369 @@ const task={
 
     renderTasks();
 
+}
+
+
+// ==========================
+// INPUTLARI TEMİZLE
+// ==========================
+
+function clearInputs() {
+
+    taskInput.value = "";
+
+    category.selectedIndex = 0;
+
+    priority.selectedIndex = 0;
+
+    date.value = "";
 
 }
 
-function clearInputs(){
 
-    taskInput.value="";
+// ==========================
+// GÖREVLERİ GÖSTER
+// ==========================
 
-    category.selectedIndex=0;
+function renderTasks() {
 
-    priority.selectedIndex=0;
+    taskList.innerHTML = "";
 
-    date.value="";
 
-}
+    // Görev yoksa boş ekran
+    if (tasks.length === 0) {
 
-function renderTasks(){
-    
+        emptyState.style.display = "block";
 
-    taskList.innerHTML="";
-    if(tasks.length===0){
+    } else {
 
-    emptyState.style.display="block";
-
-}else{
-
-    emptyState.style.display="none";
-
-}
-    if(tasks.length===0){
-
-    emptyState.style.display="block";
-
-}else{
-
-    emptyState.style.display="none";
-
-}
-
-    let filtered=[...tasks];
-
-    if(currentFilter==="completed"){
-
-        filtered=filtered.filter(task=>task.completed);
+        emptyState.style.display = "none";
 
     }
 
-    if(currentFilter==="active"){
 
-        filtered=filtered.filter(task=>!task.completed);
+    let filteredTasks = [...tasks];
+
+
+    // Tamamlanan görevler
+    if (currentFilter === "completed") {
+
+        filteredTasks = filteredTasks.filter(function (task) {
+
+            return task.completed;
+
+        });
 
     }
 
-    filtered=filtered.filter(task=>
 
-        task.text.toLowerCase().includes(searchInput.value.toLowerCase())
+    // Bekleyen görevler
+    if (currentFilter === "active") {
 
-    );
+        filteredTasks = filteredTasks.filter(function (task) {
 
-    filtered.sort((a,b)=>b.favorite-a.favorite);
-    if(sortSelect.value==="name"){
-
-    filtered.sort((a,b)=>
-
-        a.text.localeCompare(b.text)
-
-    );
-
-}
-
-if(sortSelect.value==="date"){
-
-    filtered.sort((a,b)=>
-
-        (a.date||"9999").localeCompare(b.date||"9999")
-
-    );
-
-}
-
-if(sortSelect.value==="priority"){
-
-    const order={
-
-        "Yüksek":3,
-
-        "Orta":2,
-
-        "Düşük":1
-
-    };
-
-    filtered.sort((a,b)=>
-
-        order[b.priority]-order[a.priority]
-
-    );
-
-}
-
-    filtered.forEach(task=>{
-
-        const priorityClass=
-
-        task.priority==="Yüksek"
-
-        ? "high"
-
-        : task.priority==="Orta"
-
-        ? "medium"
-
-        : "low";
-
-        const div=document.createElement("div");
-        div.draggable = true;
-div.dataset.id = task.id;
-
-        div.className=`task ${priorityClass}`;
-        const today = new Date().toISOString().split("T")[0];
-
-if(task.date && task.date < today && !task.completed){
-
-    div.classList.add("overdue");
-
-}
-
-        if(task.completed){
-
-            div.classList.add("completed");
-
-        }
-let categoryIcon = "📌";
-
-if(task.category==="Okul"){
-
-    categoryIcon="🎓";
-
-}
-
-else if(task.category==="İş"){
-
-    categoryIcon="💼";
-
-}
-
-else if(task.category==="Kişisel"){
-
-    categoryIcon="🏠";
-
-}
-        div.innerHTML=`
-
-<div class="left">
-
-<input
-type="checkbox"
-${task.completed?"checked":""}
-class="check">
-
-<div>
-
-<h3>${task.text}</h3>
-
-<p>${categoryIcon} ${task.category}</p>
-
-<span class="badge ${priorityClass}">
-${task.priority}
-</span>
-
-<br>
-
-<small>
-
-📅 ${task.date || ""}
-
-<br>
-
-${getRemainingDays(task.date)}
-
-</small>
-${task.completed
-? '<span class="done-badge">✔ Tamamlandı</span>'
-: ''}
-
-</div>
-
-</div>
-
-<div class="actions">
-
-<button class="favorite">
-
-${task.favorite?"⭐":"☆"}
-
-</button>
-
-<button class="edit">
-
-✏️
-
-</button>
-
-<button class="delete">
-
-🗑️
-
-</button>
-
-</div>
-
-`;
-div.addEventListener("dragstart", dragStart);
-
-div.addEventListener("dragover", dragOver);
-
-div.addEventListener("drop", dropTask);
-        taskList.appendChild(div);
-                const checkbox=div.querySelector(".check");
-
-        checkbox.addEventListener("change",()=>{
-
-            toggleTask(task.id);
+            return !task.completed;
 
         });
 
-        div.querySelector(".favorite").addEventListener("click",()=>{
+    }
 
-            toggleFavorite(task.id);
 
-        });
+    // Arama
+    filteredTasks = filteredTasks.filter(function (task) {
 
-        div.querySelector(".edit").addEventListener("click",()=>{
-
-            editTask(task.id);
-
-        });
-
-        div.querySelector(".delete").addEventListener("click",()=>{
-
-            deleteTask(task.id);
-
-        });
+        return task.text
+            .toLowerCase()
+            .includes(searchInput.value.toLowerCase());
 
     });
+
+
+    // Favoriler üstte
+    filteredTasks.sort(function (a, b) {
+
+        return b.favorite - a.favorite;
+
+    });
+
+
+    // İsme göre sırala
+    if (sortSelect.value === "name") {
+
+        filteredTasks.sort(function (a, b) {
+
+            return a.text.localeCompare(b.text);
+
+        });
+
+    }
+
+
+    // Tarihe göre sırala
+    if (sortSelect.value === "date") {
+
+        filteredTasks.sort(function (a, b) {
+
+            return (a.date || "9999")
+                .localeCompare(b.date || "9999");
+
+        });
+
+    }
+
+
+    // Önceliğe göre sırala
+    if (sortSelect.value === "priority") {
+
+        const priorityOrder = {
+
+            "Yüksek": 3,
+            "Orta": 2,
+            "Düşük": 1
+
+        };
+
+        filteredTasks.sort(function (a, b) {
+
+            return priorityOrder[b.priority] -
+                priorityOrder[a.priority];
+
+        });
+
+    }
+
+
+    // Aramada sonuç bulunamadıysa
+    if (tasks.length > 0 && filteredTasks.length === 0) {
+
+        emptyState.style.display = "block";
+
+        emptyState.querySelector("h2").textContent =
+            "Görev bulunamadı";
+
+        emptyState.querySelector("p").textContent =
+            "Arama veya filtre seçimini değiştirebilirsin.";
+
+    } else {
+
+        emptyState.querySelector("h2").textContent =
+            "Henüz görev yok";
+
+        emptyState.querySelector("p").textContent =
+            "İlk görevini ekleyerek planlamaya başlayabilirsin.";
+
+    }
+
+
+    filteredTasks.forEach(function (task) {
+
+        createTask(task);
+
+    });
+
 
     updateStats();
 
 }
 
-function toggleTask(id){
 
-    tasks = tasks.map(task=>{
+// ==========================
+// GÖREV KARTI OLUŞTUR
+// ==========================
 
-        if(task.id===id){
+function createTask(task) {
 
-            task.completed=!task.completed;
+    let priorityClass = "low";
+
+    if (task.priority === "Yüksek") {
+
+        priorityClass = "high";
+
+    }
+
+    else if (task.priority === "Orta") {
+
+        priorityClass = "medium";
+
+    }
+
+
+    let categoryIcon = "📌";
+
+    if (task.category === "Okul") {
+
+        categoryIcon = "🎓";
+
+    }
+
+    else if (task.category === "İş") {
+
+        categoryIcon = "💼";
+
+    }
+
+    else if (task.category === "Kişisel") {
+
+        categoryIcon = "🏠";
+
+    }
+
+
+    const div = document.createElement("div");
+
+    div.className = "task " + priorityClass;
+
+    div.dataset.id = task.id;
+
+    div.draggable = true;
+
+
+    // Gecikmiş görev kontrolü
+    const today = new Date().toISOString().split("T")[0];
+
+    if (
+        task.date &&
+        task.date < today &&
+        !task.completed
+    ) {
+
+        div.classList.add("overdue");
+
+    }
+
+
+    // Tamamlanan görev
+    if (task.completed) {
+
+        div.classList.add("completed");
+
+    }
+
+
+    div.innerHTML = `
+        <div class="left">
+
+            <input
+                type="checkbox"
+                class="check"
+                ${task.completed ? "checked" : ""}
+            >
+
+            <div>
+
+                <h3>${task.text}</h3>
+
+                <p>
+                    ${categoryIcon} ${task.category}
+                </p>
+
+                <span class="badge ${priorityClass}">
+                    ${task.priority}
+                </span>
+
+                <br>
+
+                <small>
+                    ${task.date ? "📅 " + task.date : ""}
+                    <br>
+                    ${getRemainingDays(task.date)}
+                </small>
+
+                ${
+                    task.completed
+                        ? '<span class="done-badge">✔ Tamamlandı</span>'
+                        : ""
+                }
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button
+                class="favorite"
+                title="Favori">
+                ${task.favorite ? "⭐" : "☆"}
+            </button>
+
+            <button
+                class="edit"
+                title="Düzenle">
+                ✏️
+            </button>
+
+            <button
+                class="delete"
+                title="Sil">
+                🗑️
+            </button>
+
+        </div>
+    `;
+
+
+    // Checkbox
+    const checkbox = div.querySelector(".check");
+
+    checkbox.addEventListener("change", function () {
+
+        toggleTask(task.id);
+
+    });
+
+
+    // Favori
+    div.querySelector(".favorite")
+        .addEventListener("click", function () {
+
+            toggleFavorite(task.id);
+
+        });
+
+
+    // Düzenle
+    div.querySelector(".edit")
+        .addEventListener("click", function () {
+
+            editTask(task.id);
+
+        });
+
+
+    // Sil
+    div.querySelector(".delete")
+        .addEventListener("click", function () {
+
+            deleteTask(task.id);
+
+        });
+
+
+    // Sürükle bırak
+    div.addEventListener("dragstart", dragStart);
+
+    div.addEventListener("dragover", dragOver);
+
+    div.addEventListener("drop", dropTask);
+
+
+    taskList.appendChild(div);
+
+}
+
+
+// ==========================
+// TAMAMLANDI
+// ==========================
+
+function toggleTask(id) {
+
+    tasks = tasks.map(function (task) {
+
+        if (task.id === id) {
+
+            task.completed = !task.completed;
 
         }
 
@@ -438,9 +604,18 @@ function toggleTask(id){
 
 }
 
-function deleteTask(id){
 
-    tasks = tasks.filter(task=>task.id!==id);
+// ==========================
+// GÖREV SİL
+// ==========================
+
+function deleteTask(id) {
+
+    tasks = tasks.filter(function (task) {
+
+        return task.id !== id;
+
+    });
 
     saveTasks();
 
@@ -450,13 +625,18 @@ function deleteTask(id){
 
 }
 
-function toggleFavorite(id){
 
-    tasks = tasks.map(task=>{
+// ==========================
+// FAVORİ
+// ==========================
 
-        if(task.id===id){
+function toggleFavorite(id) {
 
-            task.favorite=!task.favorite;
+    tasks = tasks.map(function (task) {
+
+        if (task.id === id) {
+
+            task.favorite = !task.favorite;
 
         }
 
@@ -471,11 +651,25 @@ function toggleFavorite(id){
     showToast("Favori güncellendi");
 
 }
-function editTask(id){
 
-    const task = tasks.find(item=>item.id===id);
 
-    if(!task) return;
+// ==========================
+// GÖREV DÜZENLE
+// ==========================
+
+function editTask(id) {
+
+    const task = tasks.find(function (item) {
+
+        return item.id === id;
+
+    });
+
+    if (!task) {
+
+        return;
+
+    }
 
     taskInput.value = task.text;
 
@@ -487,152 +681,387 @@ function editTask(id){
 
     editingTaskId = id;
 
-    addBtn.textContent="💾 Kaydet";
+    addBtn.textContent = "💾 Kaydet";
 
     taskInput.focus();
 
+    window.scrollTo({
+        top: taskInput.offsetTop - 100,
+        behavior: "smooth"
+    });
+
 }
 
-function updateStats(){
 
-    totalTask.textContent=tasks.length;
+// ==========================
+// İSTATİSTİKLER
+// ==========================
 
-    const completed=tasks.filter(task=>task.completed).length;
+function updateStats() {
 
-    completedTask.textContent=completed;
+    const completed = tasks.filter(function (task) {
 
-    remainingTask.textContent=tasks.length-completed;
-    const today = new Date().toISOString().split("T")[0];
+        return task.completed;
 
-favoriteTask.textContent = tasks.filter(task=>task.favorite).length;
+    }).length;
 
-todayTask.textContent = tasks.filter(task=>task.date===today).length;
 
-overdueTask.textContent = tasks.filter(task=>
+    totalTask.textContent = tasks.length;
 
-    task.date &&
-    task.date<today &&
-    !task.completed
+    completedTask.textContent = completed;
 
-).length;
+    remainingTask.textContent =
+        tasks.length - completed;
 
-    const percent=
 
-    tasks.length===0
+    const today =
+        new Date().toISOString().split("T")[0];
 
-    ?0
 
-    :(completed/tasks.length)*100;
+    const favorites = tasks.filter(function (task) {
 
-    progressBar.style.width=percent+"%";
-    progressText.textContent=Math.round(percent)+"%";
+        return task.favorite;
+
+    }).length;
+
+
+    const todayTasks = tasks.filter(function (task) {
+
+        return task.date === today;
+
+    }).length;
+
+
+    const overdue = tasks.filter(function (task) {
+
+        return (
+            task.date &&
+            task.date < today &&
+            !task.completed
+        );
+
+    }).length;
+
+
+    favoriteTask.textContent = favorites;
+
+    todayTask.textContent = todayTasks;
+
+    overdueTask.textContent = overdue;
+
+
+    // İlerleme yüzdesi
+    let percent = 0;
+
+    if (tasks.length > 0) {
+
+        percent =
+            (completed / tasks.length) * 100;
+
+    }
+
+    progressBar.style.width = percent + "%";
+
+    progressText.textContent =
+        Math.round(percent) + "%";
+
+
+    // Bildirim sayısı
+    notificationCount.textContent =
+        tasks.length - completed;
+
+
+    // Görev sayacı
+    taskCounter.textContent =
+        "Toplam " + tasks.length + " görev";
+
+
+    // Kategori sayıları
+    schoolCount.textContent =
+        countCategory("Okul");
+
+    workCount.textContent =
+        countCategory("İş");
+
+    personalCount.textContent =
+        countCategory("Kişisel");
+
+    generalCount.textContent =
+        countCategory("Genel");
+
+
     updateFocusTask();
-    notificationCount.textContent = tasks.filter(
 
-    task=>!task.completed
-
-).length;
-taskCounter.textContent=`Toplam ${tasks.length} görev`;
-schoolCount.textContent =
-tasks.filter(task=>task.category==="Okul").length;
-
-workCount.textContent =
-tasks.filter(task=>task.category==="İş").length;
-
-personalCount.textContent =
-tasks.filter(task=>task.category==="Kişisel").length;
-
-generalCount.textContent =
-tasks.filter(task=>task.category==="Genel").length;
 }
 
-function saveTasks(){
+
+// ==========================
+// KATEGORİ SAYISI
+// ==========================
+
+function countCategory(categoryName) {
+
+    return tasks.filter(function (task) {
+
+        return task.category === categoryName;
+
+    }).length;
+
+}
+
+
+// ==========================
+// GÜNÜN GÖREVİ
+// ==========================
+
+function updateFocusTask() {
+
+    const activeTasks = tasks.filter(function (task) {
+
+        return !task.completed;
+
+    });
+
+
+    if (activeTasks.length === 0) {
+
+        focusTask.textContent =
+            "Bugün için görev bulunmuyor.";
+
+        return;
+
+    }
+
+
+    const priorityOrder = {
+
+        "Yüksek": 3,
+        "Orta": 2,
+        "Düşük": 1
+
+    };
+
+
+    activeTasks.sort(function (a, b) {
+
+        return priorityOrder[b.priority] -
+            priorityOrder[a.priority];
+
+    });
+
+
+    focusTask.textContent =
+        activeTasks[0].text;
+
+}
+
+
+// ==========================
+// KALAN GÜN
+// ==========================
+
+function getRemainingDays(taskDate) {
+
+    if (!taskDate) {
+
+        return "";
+
+    }
+
+
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+
+    const target = new Date(taskDate);
+
+    target.setHours(0, 0, 0, 0);
+
+
+    const difference =
+        target - today;
+
+
+    const days =
+        Math.round(
+            difference /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+    if (days > 0) {
+
+        return "⏳ " + days + " gün kaldı";
+
+    }
+
+
+    if (days === 0) {
+
+        return "🔥 Son gün";
+
+    }
+
+
+    return "⚠️ " +
+        Math.abs(days) +
+        " gün geçti";
+
+}
+
+
+// ==========================
+// LOCAL STORAGE
+// ==========================
+
+function saveTasks() {
 
     localStorage.setItem(
-
         "tasks",
-
         JSON.stringify(tasks)
-
     );
 
 }
-function toggleTheme(){
+
+
+// ==========================
+// DARK MODE
+// ==========================
+
+function toggleTheme() {
 
     document.body.classList.toggle("dark");
 
-    if(document.body.classList.contains("dark")){
 
-        localStorage.setItem("theme","dark");
-        themeBtn.textContent="☀️";
+    if (
+        document.body.classList.contains("dark")
+    ) {
 
-    }else{
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
 
-        localStorage.setItem("theme","light");
-        themeBtn.textContent="🌙";
+        themeBtn.textContent = "☀️";
+
+    }
+
+    else {
+
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
+
+        themeBtn.textContent = "🌙";
 
     }
 
 }
 
 
-function showToast(message){
+// ==========================
+// BİLDİRİM MESAJI
+// ==========================
 
-    toast.textContent=message;
+function showToast(message) {
+
+    toast.textContent = message;
 
     toast.classList.add("show");
 
-    setTimeout(()=>{
+
+    setTimeout(function () {
 
         toast.classList.remove("show");
 
-    },2500);
+    }, 2500);
 
 }
-function exportTasks(){
 
-    const data = JSON.stringify(tasks,null,2);
 
-    const blob = new Blob(
+// ==========================
+// DIŞA AKTAR
+// ==========================
 
-        [data],
+function exportTasks() {
 
-        {
+    const data =
+        JSON.stringify(tasks, null, 2);
 
-            type:"application/json"
 
-        }
+    const blob =
+        new Blob(
+            [data],
+            {
+                type: "application/json"
+            }
+        );
 
-    );
 
-    const url = URL.createObjectURL(blob);
+    const url =
+        URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
 
-    a.href = url;
+    const link =
+        document.createElement("a");
 
-    a.download = "TaskFlow.json";
 
-    a.click();
+    link.href = url;
+
+    link.download = "Taskly.json";
+
+    link.click();
+
 
     URL.revokeObjectURL(url);
+
 
     showToast("Görevler indirildi");
 
 }
-function importTasks(event){
 
-    const file = event.target.files[0];
 
-    if(!file) return;
+// ==========================
+// İÇE AKTAR
+// ==========================
 
-    const reader = new FileReader();
+function importTasks(event) {
 
-    reader.onload = function(e){
+    const file =
+        event.target.files[0];
 
-        try{
 
-            tasks = JSON.parse(e.target.result);
+    if (!file) {
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function (e) {
+
+        try {
+
+            const importedTasks =
+                JSON.parse(e.target.result);
+
+
+            if (!Array.isArray(importedTasks)) {
+
+                showToast("Geçersiz dosya");
+
+                return;
+
+            }
+
+
+            tasks = importedTasks;
 
             saveTasks();
 
@@ -642,28 +1071,40 @@ function importTasks(event){
 
         }
 
-        catch{
+        catch {
 
             showToast("Geçersiz dosya");
 
         }
 
-    }
+    };
+
 
     reader.readAsText(file);
 
 }
-function clearTasks(){
 
-    const answer = confirm("Bütün görevler silinsin mi?");
 
-    if(!answer){
+// ==========================
+// TÜMÜNÜ SİL
+// ==========================
+
+function clearTasks() {
+
+    const answer =
+        confirm(
+            "Bütün görevler silinsin mi?"
+        );
+
+
+    if (!answer) {
 
         return;
 
     }
 
-    tasks=[];
+
+    tasks = [];
 
     saveTasks();
 
@@ -672,123 +1113,79 @@ function clearTasks(){
     showToast("Bütün görevler silindi");
 
 }
-function updateFocusTask(){
 
-    const activeTasks = tasks.filter(task=>!task.completed);
 
-    if(activeTasks.length===0){
+// ==========================
+// SÜRÜKLE - BIRAK
+// ==========================
 
-        focusTask.textContent="Bugün için görev bulunmuyor.";
+function dragStart() {
 
-        return;
-
-    }
-
-    activeTasks.sort((a,b)=>{
-
-        const order={
-
-            "Yüksek":3,
-
-            "Orta":2,
-
-            "Düşük":1
-
-        };
-
-        return order[b.priority]-order[a.priority];
-
-    });
-
-    focusTask.textContent=
-
-    activeTasks[0].text;
+    draggedId =
+        Number(this.dataset.id);
 
 }
-function getRemainingDays(date){
 
-    if(!date){
 
-        return "";
-
-    }
-
-    const today=new Date();
-
-    const target=new Date(date);
-
-    const diff=Math.ceil(
-
-        (target-today)/(1000*60*60*24)
-
-    );
-
-    if(diff>0){
-
-        return `⏳ ${diff} gün kaldı`;
-
-    }
-
-    if(diff===0){
-
-        return "🔥 Son gün";
-
-    }
-
-    return `⚠️ ${Math.abs(diff)} gün geçti`;
-
-}
-let draggedId = null;
-
-function dragStart(){
-
-    draggedId = Number(this.dataset.id);
-
-}
-function dragOver(e){
+function dragOver(e) {
 
     e.preventDefault();
 
 }
-function dropTask(){
 
-    const targetId = Number(this.dataset.id);
 
-    if(draggedId===targetId){
+function dropTask() {
+
+    const targetId =
+        Number(this.dataset.id);
+
+
+    if (draggedId === targetId) {
 
         return;
 
     }
 
-    const draggedIndex = tasks.findIndex(
 
-        task=>task.id===draggedId
+    const draggedIndex =
+        tasks.findIndex(function (task) {
 
-    );
+            return task.id === draggedId;
 
-    const targetIndex = tasks.findIndex(
+        });
 
-        task=>task.id===targetId
 
-    );
+    const targetIndex =
+        tasks.findIndex(function (task) {
 
-    const item = tasks.splice(
+            return task.id === targetId;
 
-        draggedIndex,
+        });
 
-        1
 
-    )[0];
+    if (
+        draggedIndex === -1 ||
+        targetIndex === -1
+    ) {
+
+        return;
+
+    }
+
+
+    const item =
+        tasks.splice(
+            draggedIndex,
+            1
+        )[0];
+
 
     tasks.splice(
-
         targetIndex,
-
         0,
-
         item
-
     );
+
 
     saveTasks();
 
