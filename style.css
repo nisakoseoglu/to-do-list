@@ -1,6 +1,3 @@
-/* =========================
-   TASKLY - GENEL AYARLAR
-========================= */
 
 * {
     margin: 0;
@@ -48,11 +45,6 @@ button {
     max-width: 1100px;
     margin: 35px auto;
 }
-
-
-/* =========================
-   HEADER
-========================= */
 
 .header {
     display: flex;
@@ -131,11 +123,6 @@ button {
     background: #f1f1f5;
 }
 
-
-/* =========================
-   HERO
-========================= */
-
 .hero {
     display: flex;
     justify-content: space-between;
@@ -208,11 +195,6 @@ button {
     max-width: 40%;
 }
 
-
-/* =========================
-   DASHBOARD
-========================= */
-
 .dashboard {
     display: grid;
 
@@ -245,10 +227,6 @@ button {
     font-size: 1.8rem;
 }
 
-
-/* =========================
-   İLERLEME
-========================= */
 
 .progress-card {
     background: white;
@@ -291,11 +269,6 @@ button {
     transition: width 0.3s;
 }
 
-
-/* =========================
-   GÜNÜN GÖREVİ
-========================= */
-
 .focus-card {
     background: #eef2ff;
 
@@ -325,11 +298,6 @@ button {
     font-weight: 500;
 }
 
-
-/* =========================
-   BÖLÜM BAŞLIKLARI
-========================= */
-
 .section-heading {
     margin-bottom: 18px;
 }
@@ -343,11 +311,6 @@ button {
     color: var(--gray);
     font-size: 14px;
 }
-
-
-/* =========================
-   YENİ GÖREV
-========================= */
 
 .task-section {
     background: white;
@@ -408,11 +371,6 @@ button {
     background: var(--primary-dark);
 }
 
-
-/* =========================
-   GÖREVLER
-========================= */
-
 .tasks-section {
     background: white;
 
@@ -458,11 +416,6 @@ button {
     outline: none;
 }
 
-
-/* =========================
-   ARAMA
-========================= */
-
 .search {
     margin-bottom: 15px;
 }
@@ -477,11 +430,6 @@ button {
 
     outline: none;
 }
-
-
-/* =========================
-   FİLTRELER
-========================= */
 
 .filters {
     display: flex;
@@ -513,11 +461,6 @@ button {
 
     border-color: var(--primary);
 }
-
-
-/* =========================
-   GÖREV KARTLARI
-========================= */
 
 .task-list {
     display: flex;
@@ -585,11 +528,6 @@ button {
     opacity: 0.5;
 }
 
-
-/* =========================
-   ÖNCELİK ETİKETLERİ
-========================= */
-
 .badge {
     display: inline-block;
 
@@ -634,11 +572,6 @@ button {
     font-size: 11px;
 }
 
-
-/* =========================
-   GÖREV BUTONLARI
-========================= */
-
 .actions {
     display: flex;
     gap: 7px;
@@ -670,20 +603,12 @@ button {
 .actions button:hover {
     opacity: 0.85;
 }
-
-
-/* =========================
-   GECİKEN GÖREV
-========================= */
+======================== */
 
 .overdue {
     background: #fff7f7;
 }
 
-
-/* =========================
-   BOŞ LİSTE
-========================= */
 
 .empty-state {
     display: none;
@@ -713,10 +638,6 @@ button {
     font-size: 14px;
 }
 
-
-/* =========================
-   KATEGORİLER
-========================= */
 
 .category-section {
     margin-bottom: 25px;
@@ -762,11 +683,6 @@ button {
     color: var(--primary);
 }
 
-
-/* =========================
-   ARAÇLAR
-========================= */
-
 .tools {
     display: flex;
 
@@ -796,11 +712,6 @@ button {
     color: var(--danger);
 }
 
-
-/* =========================
-   TOAST MESAJI
-========================= */
-
 #toast {
     position: fixed;
 
@@ -825,11 +736,6 @@ button {
     transform: translateX(0);
 }
 
-
-/* =========================
-   FOOTER
-========================= */
-
 .footer {
     text-align: center;
 
@@ -840,10 +746,6 @@ button {
     font-size: 13px;
 }
 
-
-/* =========================
-   DARK MODE
-========================= */
 
 body.dark {
     background: #111827;
@@ -905,11 +807,6 @@ body.dark .category-card strong {
 body.dark .overdue {
     background: #3b1c1c;
 }
-
-
-/* =========================
-   MOBİL
-========================= */
 
 @media (max-width: 850px) {
 
@@ -1025,12 +922,7 @@ body.dark .overdue {
         grid-template-columns: 1fr;
     }
 }
-/* =========================
-   SON UI DÜZELTMELERİ
-========================= */
 
-
-/* Header sağ taraf */
 .header {
     width: 100%;
 }
@@ -1061,8 +953,6 @@ body.dark .overdue {
     right: -7px;
 }
 
-
-/* 4 istatistik kartını daha dengeli yap */
 .dashboard {
     grid-template-columns: repeat(4, 1fr);
 }
@@ -1071,8 +961,6 @@ body.dark .overdue {
     min-width: 0;
 }
 
-
-/* Boş görev alanını küçült */
 .empty-state {
     padding: 30px 20px;
 }
@@ -1081,8 +969,6 @@ body.dark .overdue {
     font-size: 42px;
 }
 
-
-/* Tablet */
 @media (max-width: 700px) {
 
     .dashboard {
@@ -1091,8 +977,6 @@ body.dark .overdue {
 
 }
 
-
-/* Telefon */
 @media (max-width: 500px) {
 
     .header {
@@ -1118,7 +1002,6 @@ body.dark .overdue {
     }
 
 }
-/* HEADER DÜZELTME */
 
 .header {
     position: relative;
@@ -1136,7 +1019,6 @@ body.dark .overdue {
     margin-left: auto;
 }
 
-/* Bildirim */
 .notification {
     width: 44px;
     height: 44px;
@@ -1154,7 +1036,6 @@ body.dark .overdue {
     font-size: 20px;
 }
 
-/* Kırmızı bildirim sayısı */
 .notification span {
     position: absolute;
 
@@ -1167,7 +1048,6 @@ body.dark .overdue {
     font-size: 10px;
 }
 
-/* Tema butonu */
 #themeBtn {
     width: 44px;
     height: 44px;
@@ -1185,7 +1065,6 @@ body.dark .overdue {
     font-size: 19px;
 }
 
-/* Mobil */
 @media (max-width: 600px) {
 
     .header {
@@ -1204,4 +1083,8 @@ body.dark .overdue {
         height: 40px;
     }
 
+}
+.hero img {
+    width: 380px;
+    max-width: 45%;
 }
