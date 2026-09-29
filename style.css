@@ -1118,3 +1118,90 @@ body.dark .overdue {
     }
 
 }
+/* HEADER DÜZELTME */
+
+.header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    margin-left: auto;
+}
+
+/* Bildirim */
+.notification {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    font-size: 20px;
+}
+
+/* Kırmızı bildirim sayısı */
+.notification span {
+    position: absolute;
+
+    top: -6px;
+    right: -6px;
+
+    width: 19px;
+    height: 19px;
+
+    font-size: 10px;
+}
+
+/* Tema butonu */
+#themeBtn {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    font-size: 19px;
+}
+
+/* Mobil */
+@media (max-width: 600px) {
+
+    .header {
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .notification,
+    #themeBtn {
+        width: 40px;
+        height: 40px;
+    }
+
+}
