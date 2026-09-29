@@ -936,8 +936,6 @@ function importTasks(event) {
 
 }
 
-====================
-
 function clearTasks() {
 
     const answer =
