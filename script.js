@@ -1,6 +1,3 @@
-// ==========================
-// HTML ELEMANLARI
-// ==========================
 
 const taskInput = document.getElementById("taskInput");
 const category = document.getElementById("category");
@@ -45,11 +42,6 @@ const clearBtn = document.getElementById("clearBtn");
 
 const toast = document.getElementById("toast");
 
-
-// ==========================
-// DEĞİŞKENLER
-// ==========================
-
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 let currentFilter = "all";
@@ -57,11 +49,6 @@ let currentFilter = "all";
 let editingTaskId = null;
 
 let draggedId = null;
-
-
-// ==========================
-// SAYFA AÇILDIĞINDA
-// ==========================
 
 const savedTheme = localStorage.getItem("theme");
 
@@ -76,18 +63,10 @@ if (savedTheme === "dark") {
     themeBtn.textContent = "🌙";
 
 }
-
 renderTasks();
-
-
-// ==========================
-// EVENTLER
-// ==========================
 
 addBtn.addEventListener("click", addTask);
 
-
-// Enter ile görev ekleme
 taskInput.addEventListener("keypress", function (e) {
 
     if (e.key === "Enter") {
@@ -98,12 +77,8 @@ taskInput.addEventListener("keypress", function (e) {
 
 });
 
-
-// Arama
 searchInput.addEventListener("input", renderTasks);
 
-
-// Filtreler
 filters.forEach(function (button) {
 
     button.addEventListener("click", function () {
@@ -124,20 +99,12 @@ filters.forEach(function (button) {
 
 });
 
-
-// Tema
 themeBtn.addEventListener("click", toggleTheme);
 
-
-// Sıralama
 sortSelect.addEventListener("change", renderTasks);
 
-
-// Dışa aktar
 exportBtn.addEventListener("click", exportTasks);
 
-
-// İçe aktar
 importBtn.addEventListener("click", function () {
 
     fileInput.click();
@@ -146,14 +113,7 @@ importBtn.addEventListener("click", function () {
 
 fileInput.addEventListener("change", importTasks);
 
-
-// Tüm görevleri sil
 clearBtn.addEventListener("click", clearTasks);
-
-
-// ==========================
-// GÖREV EKLEME
-// ==========================
 
 function addTask() {
 
@@ -183,15 +143,12 @@ function addTask() {
 
     };
 
-
-    // Görev düzenleniyorsa
     if (editingTaskId) {
 
         tasks = tasks.map(function (item) {
 
             if (item.id === editingTaskId) {
 
-                // Eski tamamlanma ve favori bilgisi kaybolmasın
                 task.completed = item.completed;
                 task.favorite = item.favorite;
 
@@ -211,7 +168,6 @@ function addTask() {
 
     }
 
-    // Yeni görev ekleniyorsa
     else {
 
         tasks.push(task);
@@ -228,11 +184,6 @@ function addTask() {
 
 }
 
-
-// ==========================
-// INPUTLARI TEMİZLE
-// ==========================
-
 function clearInputs() {
 
     taskInput.value = "";
@@ -246,16 +197,10 @@ function clearInputs() {
 }
 
 
-// ==========================
-// GÖREVLERİ GÖSTER
-// ==========================
-
 function renderTasks() {
 
     taskList.innerHTML = "";
 
-
-    // Görev yoksa boş ekran
     if (tasks.length === 0) {
 
         emptyState.style.display = "block";
@@ -270,7 +215,6 @@ function renderTasks() {
     let filteredTasks = [...tasks];
 
 
-    // Tamamlanan görevler
     if (currentFilter === "completed") {
 
         filteredTasks = filteredTasks.filter(function (task) {
@@ -281,8 +225,6 @@ function renderTasks() {
 
     }
 
-
-    // Bekleyen görevler
     if (currentFilter === "active") {
 
         filteredTasks = filteredTasks.filter(function (task) {
@@ -294,7 +236,6 @@ function renderTasks() {
     }
 
 
-    // Arama
     filteredTasks = filteredTasks.filter(function (task) {
 
         return task.text
@@ -303,8 +244,6 @@ function renderTasks() {
 
     });
 
-
-    // Favoriler üstte
     filteredTasks.sort(function (a, b) {
 
         return b.favorite - a.favorite;
@@ -312,7 +251,6 @@ function renderTasks() {
     });
 
 
-    // İsme göre sırala
     if (sortSelect.value === "name") {
 
         filteredTasks.sort(function (a, b) {
@@ -323,8 +261,6 @@ function renderTasks() {
 
     }
 
-
-    // Tarihe göre sırala
     if (sortSelect.value === "date") {
 
         filteredTasks.sort(function (a, b) {
@@ -337,7 +273,6 @@ function renderTasks() {
     }
 
 
-    // Önceliğe göre sırala
     if (sortSelect.value === "priority") {
 
         const priorityOrder = {
@@ -357,8 +292,6 @@ function renderTasks() {
 
     }
 
-
-    // Aramada sonuç bulunamadıysa
     if (tasks.length > 0 && filteredTasks.length === 0) {
 
         emptyState.style.display = "block";
@@ -390,11 +323,6 @@ function renderTasks() {
     updateStats();
 
 }
-
-
-// ==========================
-// GÖREV KARTI OLUŞTUR
-// ==========================
 
 function createTask(task) {
 
@@ -443,7 +371,6 @@ function createTask(task) {
     div.draggable = true;
 
 
-    // Gecikmiş görev kontrolü
     const today = new Date().toISOString().split("T")[0];
 
     if (
@@ -456,8 +383,6 @@ function createTask(task) {
 
     }
 
-
-    // Tamamlanan görev
     if (task.completed) {
 
         div.classList.add("completed");
@@ -528,7 +453,6 @@ function createTask(task) {
     `;
 
 
-    // Checkbox
     const checkbox = div.querySelector(".check");
 
     checkbox.addEventListener("change", function () {
@@ -538,7 +462,6 @@ function createTask(task) {
     });
 
 
-    // Favori
     div.querySelector(".favorite")
         .addEventListener("click", function () {
 
@@ -546,8 +469,6 @@ function createTask(task) {
 
         });
 
-
-    // Düzenle
     div.querySelector(".edit")
         .addEventListener("click", function () {
 
@@ -555,8 +476,6 @@ function createTask(task) {
 
         });
 
-
-    // Sil
     div.querySelector(".delete")
         .addEventListener("click", function () {
 
@@ -564,8 +483,6 @@ function createTask(task) {
 
         });
 
-
-    // Sürükle bırak
     div.addEventListener("dragstart", dragStart);
 
     div.addEventListener("dragover", dragOver);
@@ -576,11 +493,6 @@ function createTask(task) {
     taskList.appendChild(div);
 
 }
-
-
-// ==========================
-// TAMAMLANDI
-// ==========================
 
 function toggleTask(id) {
 
@@ -605,10 +517,6 @@ function toggleTask(id) {
 }
 
 
-// ==========================
-// GÖREV SİL
-// ==========================
-
 function deleteTask(id) {
 
     tasks = tasks.filter(function (task) {
@@ -625,10 +533,6 @@ function deleteTask(id) {
 
 }
 
-
-// ==========================
-// FAVORİ
-// ==========================
 
 function toggleFavorite(id) {
 
@@ -651,11 +555,6 @@ function toggleFavorite(id) {
     showToast("Favori güncellendi");
 
 }
-
-
-// ==========================
-// GÖREV DÜZENLE
-// ==========================
 
 function editTask(id) {
 
@@ -691,11 +590,6 @@ function editTask(id) {
     });
 
 }
-
-
-// ==========================
-// İSTATİSTİKLER
-// ==========================
 
 function updateStats() {
 
@@ -749,8 +643,6 @@ function updateStats() {
 
     overdueTask.textContent = overdue;
 
-
-    // İlerleme yüzdesi
     let percent = 0;
 
     if (tasks.length > 0) {
@@ -765,18 +657,13 @@ function updateStats() {
     progressText.textContent =
         Math.round(percent) + "%";
 
-
-    // Bildirim sayısı
     notificationCount.textContent =
         tasks.length - completed;
 
 
-    // Görev sayacı
     taskCounter.textContent =
         "Toplam " + tasks.length + " görev";
 
-
-    // Kategori sayıları
     schoolCount.textContent =
         countCategory("Okul");
 
@@ -795,10 +682,6 @@ function updateStats() {
 }
 
 
-// ==========================
-// KATEGORİ SAYISI
-// ==========================
-
 function countCategory(categoryName) {
 
     return tasks.filter(function (task) {
@@ -809,10 +692,6 @@ function countCategory(categoryName) {
 
 }
 
-
-// ==========================
-// GÜNÜN GÖREVİ
-// ==========================
 
 function updateFocusTask() {
 
@@ -854,11 +733,6 @@ function updateFocusTask() {
         activeTasks[0].text;
 
 }
-
-
-// ==========================
-// KALAN GÜN
-// ==========================
 
 function getRemainingDays(taskDate) {
 
@@ -910,11 +784,6 @@ function getRemainingDays(taskDate) {
 
 }
 
-
-// ==========================
-// LOCAL STORAGE
-// ==========================
-
 function saveTasks() {
 
     localStorage.setItem(
@@ -924,10 +793,6 @@ function saveTasks() {
 
 }
 
-
-// ==========================
-// DARK MODE
-// ==========================
 
 function toggleTheme() {
 
@@ -961,10 +826,6 @@ function toggleTheme() {
 }
 
 
-// ==========================
-// BİLDİRİM MESAJI
-// ==========================
-
 function showToast(message) {
 
     toast.textContent = message;
@@ -980,10 +841,6 @@ function showToast(message) {
 
 }
 
-
-// ==========================
-// DIŞA AKTAR
-// ==========================
 
 function exportTasks() {
 
@@ -1021,11 +878,6 @@ function exportTasks() {
     showToast("Görevler indirildi");
 
 }
-
-
-// ==========================
-// İÇE AKTAR
-// ==========================
 
 function importTasks(event) {
 
@@ -1084,10 +936,7 @@ function importTasks(event) {
 
 }
 
-
-// ==========================
-// TÜMÜNÜ SİL
-// ==========================
+====================
 
 function clearTasks() {
 
@@ -1113,11 +962,6 @@ function clearTasks() {
     showToast("Bütün görevler silindi");
 
 }
-
-
-// ==========================
-// SÜRÜKLE - BIRAK
-// ==========================
 
 function dragStart() {
 
