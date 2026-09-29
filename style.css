@@ -1088,3 +1088,13 @@ body.dark .overdue {
     width: 380px;
     max-width: 45%;
 }
+body.dark #sortSelect {
+    background-color: #1f2937;
+    color: white;
+    border-color: #374151;
+}
+
+body.dark #sortSelect option {
+    background-color: #1f2937;
+    color: white;
+}
