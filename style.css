@@ -1025,3 +1025,96 @@ body.dark .overdue {
         grid-template-columns: 1fr;
     }
 }
+/* =========================
+   SON UI DÜZELTMELERİ
+========================= */
+
+
+/* Header sağ taraf */
+.header {
+    width: 100%;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 45px;
+    height: 45px;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.notification span {
+    top: -7px;
+    right: -7px;
+}
+
+
+/* 4 istatistik kartını daha dengeli yap */
+.dashboard {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card {
+    min-width: 0;
+}
+
+
+/* Boş görev alanını küçült */
+.empty-state {
+    padding: 30px 20px;
+}
+
+.empty-icon {
+    font-size: 42px;
+}
+
+
+/* Tablet */
+@media (max-width: 700px) {
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* Telefon */
+@media (max-width: 500px) {
+
+    .header {
+        align-items: center;
+    }
+
+    .brand p {
+        max-width: 180px;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .notification,
+    #themeBtn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
